@@ -1,29 +1,57 @@
 var rest = require('../API/Restclient');
 
-exports.displayFavouriteFood = function getFavouriteFood(session, username){
-    var url = 'http://foodbot17.azurewebsites.net/tables/FoodBot';
-    rest.getFavouriteFood(url, session, username, handleFavouriteFoodResponse)
+exports.displayFavouriteFood = function getFavouriteFood(session, username) {
+  var url = 'http://foodbot17.azurewebsites.net/tables/FoodBot';
+  rest.getFavouriteFood(url, session, username, handleFavouriteFoodResponse)
 };
-function handleFavouriteFoodResponse(message, session, username) {
-    var favouriteFoodResponse = JSON.parse(message);
-    var allFoods = [];
-    for (var index in favouriteFoodResponse) {
-        var usernameReceived = favouriteFoodResponse[index].username;
-        var favouriteFood = favouriteFoodResponse[index].favouriteFood;
 
-        //Convert to lower case whilst doing comparison to ensure the user can type whatever they like
-        if (username.toLowerCase() === usernameReceived.toLowerCase()) {
-            //Add a comma after all favourite foods unless last one
-            if(favouriteFoodResponse.length - 1) {
-                allFoods.push(favouriteFood);
-            }
-            else {
-                allFoods.push(favouriteFood + ', ');
-            }
-        }        
+function handleFavouriteFoodResponse(message, session, username) {
+  var favouriteFoodResponse = JSON.parse(message);
+  var allFoods = [];
+  for (var index in favouriteFoodResponse) {
+    var usernameReceived = favouriteFoodResponse[index].username;
+    var favouriteFood = favouriteFoodResponse[index].favouriteFood;
+
+    //Convert to lower case whilst doing comparison to ensure the user can type whatever they like
+    if (username.toLowerCase() === usernameReceived.toLowerCase()) {
+      //Add a comma after all favourite foods unless last one
+      if (favouriteFoodResponse.length - 1) {
+        allFoods.push(favouriteFood);
+      } else {
+        allFoods.push(favouriteFood + ', ');
+      }
     }
-    
-    // Print all favourite foods for the user that is currently logged in
-    session.send("%s, your favourite foods are: %s", username, allFoods);                
-    
+  }
+
+  // Print all favourite foods for the user that is currently logged in
+  session.send("%s, your favourite foods are: %s", username, allFoods);
+
+}
+
+
+exports.deleteFavouriteFood = function deleteFavouriteFood(session,username,favouriteFood){
+    var url  = 'http://foodbot17.azurewebsites.net/tables/FoodBot';
+
+
+    rest.getFavouriteFood(url,session, username,function(message,session,username){
+     var   allFoods = JSON.parse(message);
+
+        for(var i in allFoods) {
+
+            if (allFoods[i].favouriteFood === 'Pizza' && allFoods[i].username === 'KHoa') {
+
+                console.log(allFoods[i]);
+
+                rest.deleteFavouriteFood(url,session,'Khoa','Pizza', allFoods[i].id ,handleDeletedFoodResponse)
+
+            }
+        }
+
+
+    });
+
+
+};
+function handleDeletedFoodResponse(body, session, username, favouriteFood){
+  console.log(body);
 }
