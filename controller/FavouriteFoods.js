@@ -1,7 +1,7 @@
 var rest = require('../API/Restclient');
 
 exports.displayFavouriteFood = function getFavouriteFood(session, username){
-    var url = 'https://foodbotmsa.azurewebsites.net/tables/FoodBot';
+    var url = 'http://foodbot17.azurewebsites.net/tables/FoodBot';
     rest.getFavouriteFood(url, session, username, handleFavouriteFoodResponse)
 };
 function handleFavouriteFoodResponse(message, session, username) {

@@ -1,6 +1,8 @@
 var restify = require('restify');
 var builder = require('botbuilder');
 var luis = require('./controller/LuisDialog');
+var cognitive = require('./controller/CustomVision');
+
 // Some sections have been omitted
 
 // Setup Restify Server
@@ -15,7 +17,7 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
-// Listen for messages from users 
+// Listen for messages from users
 server.post('/api/messages', connector.listen());
 
 // Receive messages from the user
@@ -26,4 +28,3 @@ var bot = new builder.UniversalBot(connector, function (session) {
 
 // This line will call the function in your LuisDialog.js file
 luis.startDialog(bot);
- 
